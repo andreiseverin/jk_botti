@@ -17,3 +17,4 @@ jobs:
       run: make
     - name: make win32
       run: make OSTYPE=win32
+      
