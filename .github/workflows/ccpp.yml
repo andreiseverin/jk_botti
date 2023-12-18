@@ -17,4 +17,7 @@ jobs:
       run: make
     - name: make 
       run: make
+    - name: Create asset
+        run:|
+          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
       
