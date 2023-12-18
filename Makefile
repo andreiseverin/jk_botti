@@ -30,7 +30,8 @@ ifeq ($(DBG_FLGS),1)
 else
 	OPTFLAGS = -O2 -fomit-frame-pointer -g
 	OPTFLAGS += -funsafe-math-optimizations
-	LINKFLAGS += ${OPTFLAGS} 
+	LTOFLAGS = -flto -fvisibility=hidden
+	LINKFLAGS += ${OPTFLAGS} ${LTOFLAGS}
 endif
 
 INCLUDES = -I"./metamod" \
@@ -88,10 +89,10 @@ distclean:
 #	${CPP} ${CPPFLAGS} -funroll-loops -c $< -o $@
 
 %.o: %.cpp
-	${CPP} ${CPPFLAGS} -c $< -o $@
+	${CPP} ${CPPFLAGS} ${LTOFLAGS} -c $< -o $@
 
 %.o: %.c
-	${CPP} ${CFLAGS} -c $< -o $@
+	${CPP} ${CFLAGS} ${LTOFLAGS} -c $< -o $@
 
 depend: Rules.depend
 
