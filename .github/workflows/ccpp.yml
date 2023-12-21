@@ -16,8 +16,8 @@ jobs:
     - name: Linux build
       run: make
     # windows build is commented   
-    #- name: make 
-    # run: make
+    - name: Windows build 
+      run: make OSTYPE=win32
     - name: Create asset
       run: |
           tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
