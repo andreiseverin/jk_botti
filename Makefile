@@ -30,7 +30,7 @@ ifeq ($(DBG_FLGS),1)
 else
 	OPTFLAGS = -O2 -fomit-frame-pointer -g
 	OPTFLAGS += -funsafe-math-optimizations
-	LTOFLAGS = -flto -fvisibility=hidden --force-lto
+	LTOFLAGS = -flto -fvisibility=hidden --force-link
 	LINKFLAGS += ${OPTFLAGS} ${LTOFLAGS}
 endif
 
