@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: linux
 
 on: [push, pull_request]
 
@@ -15,9 +15,6 @@ jobs:
       run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64
     - name: Linux build
       run: make
-    # windows build is commented   
-    - name: Windows build 
-      run: make OSTYPE=win32
     - name: Create asset
       run: |
           tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
