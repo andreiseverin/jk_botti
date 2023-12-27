@@ -33,7 +33,7 @@ jobs:
       run: sudo apt install g++-4.8 gcc-4.8 -y
 
     - name: Install headers
-      run: sudo apt-get install gcc-4.8-multilib g++-4.8-multilib -y
+      run: sudo apt-get install gcc-4.8-multilib g++-4.8-multilib -y gcc-mingw-w64
     # windows build is commented   
     - name: Windows build 
       run: make OSTYPE=win32
