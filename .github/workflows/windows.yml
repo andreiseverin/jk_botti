@@ -12,7 +12,11 @@ jobs:
     - name: Update package list for i386
       run: sudo dpkg --add-architecture i386 && sudo apt-get -y update
     - name: Install packages
-      run: sudo apt-get -y install build-essential g++-10-multilib gcc-10-mingw-w64
+      run: sudo apt-get -y install build-essential
+    - name: Install g++-4.8
+      run: sudo apt install g++-4.8 gcc-4.8 -y
+    - name: Install headers
+      run: sudo apt-get install gcc-4.8-multilib g++-4.8-multilib -y
     # windows build is commented   
     - name: Windows build 
       run: make OSTYPE=win32
