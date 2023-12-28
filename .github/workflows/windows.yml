@@ -14,6 +14,8 @@ jobs:
       run: sudo dpkg --add-architecture i386 && sudo apt-get -y update
     - name: Install packages
       run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64
+    - name: Install gcc
+      run: sudo apt-get install g++
     # windows build is commented   
     - name: Windows build 
       run: make OSTYPE=win32
