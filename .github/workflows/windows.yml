@@ -1,5 +1,4 @@
-name: windows
-
+name: C/C++ CI
 
 on: [push, pull_request]
 
@@ -9,13 +8,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3.3.0
+    - uses: actions/checkout@v2
     - name: Update package list for i386
       run: sudo dpkg --add-architecture i386 && sudo apt-get -y update
     - name: Install packages
-      run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64 g++
-    # windows build is commented   
-    - name: Windows build 
+      run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64 g++-mingw-w64
+    - name: make
+      run: make
+    - name: cleanup 1
+      run: git clean -xdf
+    - name: make win32
       run: make OSTYPE=win32
     - name: Create asset
       run: |
@@ -25,3 +27,4 @@ jobs:
       with:
           name: jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
           path: ./jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
+      
