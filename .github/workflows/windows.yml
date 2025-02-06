@@ -27,5 +27,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
           name: jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
-          path: ./jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
-		  
+          path: ./jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz 
