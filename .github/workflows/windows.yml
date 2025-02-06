@@ -1,9 +1,8 @@
-name: Builder
-
-on: [push, pull_request]
+name: Windows build
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -12,28 +11,18 @@ jobs:
       run: sudo dpkg --add-architecture i386 && sudo apt-get -y update
     - name: Install packages
       run: sudo apt-get -y install build-essential g++-multilib gcc-mingw-w64 g++-mingw-w64
-    
     - name: Linux build
       run: make
-    - name: Create Linux asset
-      run: |
-          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release         
-    - name: Upload Linux build result
-      uses: actions/upload-artifact@v4
-      with:
-          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release
-          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release    
-    
-    - name: Cleanup before Windows build
+    - name: cleanup 1
       run: git clean -xdf
     - name: Windows build
       run: make OSTYPE=win32
-    - name: Create Windows asset
+    - name: Create asset
       run: |
-          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
-    
-    - name: Upload Windows build result
+          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
+    - name: Upload build result
       uses: actions/upload-artifact@v4
       with:
-          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
-          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
+          name: jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
+          path: ./jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
+		  
