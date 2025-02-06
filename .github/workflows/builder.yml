@@ -17,12 +17,12 @@ jobs:
       run: make
     - name: Create Linux asset
       run: |
-          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-linux.tar.xz        
+          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-linux      
     - name: Upload Linux build result
       uses: actions/upload-artifact@v4
       with:
-          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release
-          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release    
+          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-linux.tar.xz 
+          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-linux.tar.xz  
     
     - name: Cleanup before Windows build
       run: git clean -xdf
@@ -30,10 +30,10 @@ jobs:
       run: make OSTYPE=win32
     - name: Create Windows asset
       run: |
-          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-windows.tar.xz   
+          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-windows
     
     - name: Upload Windows build result
       uses: actions/upload-artifact@v4
       with:
-          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
-          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
+          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-windows.tar.xz 
+          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-windows.tar.xz 
