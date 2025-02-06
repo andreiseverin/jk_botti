@@ -1,4 +1,4 @@
-name: Build
+name: Builder
 
 on: [push, pull_request]
 
@@ -17,25 +17,23 @@ jobs:
       run: make
     - name: Create Linux asset
       run: |
-          tar c addons | xz > jk_botti-${{ github.sha }}-linux-release.tar.xz
+          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release         
+    - name: Upload Linux build result
+      uses: actions/upload-artifact@v4
+      with:
+          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release
+          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-linux-release    
     
     - name: Cleanup before Windows build
       run: git clean -xdf
-    
     - name: Windows build
       run: make OSTYPE=win32
     - name: Create Windows asset
       run: |
-          tar c addons | xz > jk_botti-${{ github.sha }}-windows-release.tar.xz
-    
-    - name: Upload Linux build result
-      uses: actions/upload-artifact@v4
-      with:
-          name: jk_botti-${{ github.sha }}-linux-release.tar.xz
-          path: ./jk_botti-${{ github.sha }}-linux-release.tar.xz
+          tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
     
     - name: Upload Windows build result
       uses: actions/upload-artifact@v4
       with:
-          name: jk_botti-${{ github.sha }}-windows-release.tar.xz
-          path: ./jk_botti-${{ github.sha }}-windows-release.tar.xz
+          name: jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
+          path: ./jk_botti-${{ steps.get_version.outputs.VERSION }}-windows-release
