@@ -1,4 +1,4 @@
-name: linux
+name: Linux
 
 on: [push, pull_request]
 
@@ -19,7 +19,7 @@ jobs:
       run: |
           tar c addons | xz > jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
     - name: Upload build result
-      uses: actions/upload-artifact@4
+      uses: actions/upload-artifact@v4
       with:
           name: jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
           path: ./jk_botti-${{ steps.get_version.outputs.VERSION  }}-release.tar.xz
