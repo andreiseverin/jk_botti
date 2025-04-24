@@ -1,4 +1,7 @@
 {
     "makefile.makePath": "C:\\msys64\\usr\\bin",
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "files.associations": {
+        "cmath": "cpp"
+    }
 }

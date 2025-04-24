@@ -2247,6 +2247,83 @@ static void BotDoRandomJumpingAndDuckingAndLongJumping(bot_t &pBot, float moved_
       return;
    }
 
+   // Tau jump logic
+   if (pBot.current_weapon.iId == VALVE_WEAPON_GAUSS && skill_settings[pBot.bot_skill].can_taujump && pBot.b_on_ground &&
+      !FBitSet(pEdict->v.button, IN_DUCK) && !FBitSet(pEdict->v.button, IN_JUMP) &&
+      pEdict->v.velocity.Length() > 50)
+   {
+      TraceResult tr;
+      Vector vecSrc = pEdict->v.origin;
+      Vector vecDest = vecSrc + Vector(0, 0, 300); // Check upward space
+      UTIL_TraceMove(vecSrc, vecDest, dont_ignore_monsters, pEdict, &tr);
+
+      if (tr.flFraction >= 1.0f) // Ensure there's enough space above
+      {
+         // Determine if the bot should perform a tau jump
+         qboolean should_taujump = FALSE;
+
+         if (pBot.pBotEnemy != NULL) // Attack tau jump
+         {
+            float enemy_distance = (UTIL_GetOriginWithExtent(pBot, pBot.pBotEnemy) - pEdict->v.origin).Length();
+            if (enemy_distance >= skill_settings[pBot.bot_skill].attack_taujump_distance &&
+                  RANDOM_LONG2(1, 100) <= skill_settings[pBot.bot_skill].attack_taujump_frequency)
+            {
+                  should_taujump = TRUE;
+            }
+         }
+         else if (pBot.b_low_health) // Flee tau jump
+         {
+            if (pBot.b_low_health &&
+                  RANDOM_LONG2(1, 100) <= skill_settings[pBot.bot_skill].flee_taujump_frequency)
+            {
+                  should_taujump = TRUE;
+            }
+         }
+
+         if (should_taujump)
+         {
+            // Perform the jump
+            pEdict->v.button |= IN_DUCK;
+            pEdict->v.button |= IN_JUMP;
+
+            // Charge the gauss weapon
+            pEdict->v.button |= IN_ATTACK2;
+            pBot.f_secondary_charging = gpGlobals->time + RANDOM_FLOAT2(2.0, 6.0); // Charge for 2-6 seconds
+
+            // Aim backward and downward
+            Vector backwardAngle = pEdict->v.v_angle;
+            backwardAngle.y = UTIL_WrapAngle(backwardAngle.y + 180); // Turn around
+            backwardAngle.x = UTIL_WrapAngle(backwardAngle.x + 45);  // Look downward
+            pEdict->v.ideal_yaw = backwardAngle.y;
+            pEdict->v.idealpitch = backwardAngle.x;
+            BotFixIdealYaw(pEdict);
+            BotFixIdealPitch(pEdict);
+
+            // Write in chat that the bot is tau jumping
+            safe_strcopy(pBot.bot_say_msg, sizeof(pBot.bot_say_msg), "I'm tau jumping!");
+            pBot.b_bot_say = TRUE;
+            pBot.f_bot_say = gpGlobals->time + RANDOM_FLOAT2(0.5, 1.0);
+
+            // Release the gauss weapon after charging
+            if (pBot.f_secondary_charging <= gpGlobals->time)
+            {
+                  pEdict->v.button &= ~IN_ATTACK2; // Release secondary attack
+
+                  // Reset aim to forward direction
+                  Vector forwardAngle = pEdict->v.v_angle;
+                  forwardAngle.y = UTIL_WrapAngle(forwardAngle.y - 180); // Face forward
+                  forwardAngle.x = UTIL_WrapAngle(forwardAngle.x - 45);  // Level out
+                  pEdict->v.ideal_yaw = forwardAngle.y;
+                  pEdict->v.idealpitch = forwardAngle.x;
+                  BotFixIdealYaw(pEdict);
+                  BotFixIdealPitch(pEdict);
+            }
+
+            return;
+         }
+      }
+   }
+
    // duck in mid-air after random jump!
    if (pBot.f_random_jump_duck_time > 0.0f && pBot.f_random_jump_duck_time <= gpGlobals->time) 
    {
