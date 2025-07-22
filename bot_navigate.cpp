@@ -664,7 +664,9 @@ static void BotFindWaypointGoal( bot_t &pBot )
          
          goto exit;
       }
-   }
+   } 
+    
+    
 
 exit:
 
@@ -2359,4 +2361,3 @@ void BotLookForDrop( bot_t &pBot )
       }
    }
 }
-

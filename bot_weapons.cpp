@@ -27,6 +27,18 @@ extern int submod_weaponflag;
 
 bot_weapon_select_t valve_weapon_select[NUM_OF_WEAPON_SELECTS] = 
 {
+   {VALVE_WEAPON_GAUSS, WEAPON_SUBMOD_ALL, "weapon_gauss", WEAPON_FIRE, 1.0,
+    SKILL5, SKILL5, FALSE, TRUE,
+    32.0, 500.0, 100.0, 3000.0, 500.0,
+    90, FALSE, 80, 1, 10, TRUE, FALSE, FALSE, TRUE, 0.0, 0.8, TRUE, 30, 30,
+    W_IFL_GAUSS, W_IFL_AMMO_GAUSS, 0, TRUE, FALSE },
+
+   {VALVE_WEAPON_CROSSBOW, WEAPON_SUBMOD_ALL, "weapon_crossbow", WEAPON_FIRE_ZOOM, 1.0,
+    SKILL5, SKILL5, FALSE, FALSE,
+    128.0, 4000.0, 0, 0, 1000.0,
+    90, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0, FALSE, 5, -1,
+    W_IFL_CROSSBOW, W_IFL_AMMO_CROSSBOW, 0, TRUE, FALSE },
+
    {VALVE_WEAPON_CROWBAR, WEAPON_SUBMOD_ALL, "weapon_crowbar", WEAPON_MELEE, 1.0,
     SKILL4, NOSKILL, FALSE, FALSE,
     0.0, 40.0, 0, 0, 1.0,
@@ -51,12 +63,6 @@ bot_weapon_select_t valve_weapon_select[NUM_OF_WEAPON_SELECTS] =
     50, FALSE, 100, 1, 0, TRUE, FALSE, FALSE, FALSE, 0.0, 0.0, FALSE, 20, -1,
     W_IFL_EGON, W_IFL_AMMO_GAUSS, 0, TRUE, FALSE },
 
-   {VALVE_WEAPON_GAUSS, WEAPON_SUBMOD_ALL, "weapon_gauss", WEAPON_FIRE, 1.0,
-    SKILL4, SKILL2, FALSE, TRUE,
-    32.0, 500.0, 100.0, 3000.0, 500.0,
-    60, FALSE, 80, 1, 10, TRUE, FALSE, FALSE, TRUE, 0.0, 0.8, TRUE, 30, 30,
-    W_IFL_GAUSS, W_IFL_AMMO_GAUSS, 0, TRUE, FALSE },
-
    {VALVE_WEAPON_SHOTGUN, WEAPON_SUBMOD_ALL, "weapon_shotgun", WEAPON_FIRE, 1.0,
     SKILL5, SKILL3, FALSE, TRUE,
     400.0, 1500.0, 32.0, 800.0, 400.0,
@@ -80,12 +86,6 @@ bot_weapon_select_t valve_weapon_select[NUM_OF_WEAPON_SELECTS] =
     32.0, 2000.0, 300.0, 700.0, 600.0,
     55, FALSE, 70, 1, 1, TRUE, FALSE, FALSE, FALSE, 0.0, 0.0, FALSE, 50, 2,
     W_IFL_MP5, W_IFL_AMMO_9MM, W_IFL_AMMO_ARGRENADES, TRUE, FALSE },
-
-   {VALVE_WEAPON_CROSSBOW, WEAPON_SUBMOD_ALL, "weapon_crossbow", WEAPON_FIRE_ZOOM, 1.0,
-    SKILL2, NOSKILL, FALSE, FALSE,
-    128.0, 4000.0, 0, 0, 1000.0,
-    55, TRUE, 100, 1, 0, FALSE, FALSE, FALSE, FALSE, 0.0, 0.0, FALSE, 5, -1,
-    W_IFL_CROSSBOW, W_IFL_AMMO_CROSSBOW, 0, TRUE, FALSE },
    
    {VALVE_WEAPON_RPG, WEAPON_SUBMOD_ALL, "weapon_rpg", WEAPON_FIRE_AT_FEET, 1.0,
     SKILL3, NOSKILL, FALSE, FALSE,
@@ -196,6 +196,12 @@ bot_ammo_names_t ammo_names[] = {
 // THESE MUST MATCH THE SAME ORDER AS THE WEAPON SELECT ARRAY!!!
 
 bot_fire_delay_t valve_fire_delay[NUM_OF_WEAPON_SELECTS] = {
+   {VALVE_WEAPON_GAUSS,
+    0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0},
+    0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
+   {VALVE_WEAPON_CROSSBOW,
+    0.05, {0.05, 0.1, 0.2, 0.0, 0.0}, {0.05, 0.1, 0.2, 0.0, 0.0},
+    0.1, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
    {VALVE_WEAPON_CROWBAR,
     0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0},
     0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
@@ -206,9 +212,6 @@ bot_fire_delay_t valve_fire_delay[NUM_OF_WEAPON_SELECTS] = {
     0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0},
     0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
    {VALVE_WEAPON_EGON,
-    0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0},
-    0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-   {VALVE_WEAPON_GAUSS,
     0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0},
     0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
    {VALVE_WEAPON_SHOTGUN,
@@ -223,9 +226,6 @@ bot_fire_delay_t valve_fire_delay[NUM_OF_WEAPON_SELECTS] = {
    {VALVE_WEAPON_MP5,
     0.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0},
     1.0, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
-  {VALVE_WEAPON_CROSSBOW,
-    0.05, {0.05, 0.1, 0.2, 0.0, 0.0}, {0.05, 0.1, 0.2, 0.0, 0.0},
-    0.1, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},
    {VALVE_WEAPON_RPG,
     1.5, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0},
     0.5, {0.0, 0.0, 0.0, 0.0, 0.0}, {0.0, 0.0, 0.0, 0.0, 0.0}},

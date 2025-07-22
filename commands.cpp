@@ -1414,4 +1414,3 @@ void jk_botti_ServerCommand (void)
       UTIL_ConsolePrintf("%s: Unknown command \'%s\'\n", CMD_ARGV(0), CMD_ARGS());
    }
 }
-

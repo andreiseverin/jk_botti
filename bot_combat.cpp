@@ -119,7 +119,15 @@ static void BotPointGun(bot_t &pBot)
    pEdict->v.v_angle = UTIL_WrapAngles (pEdict->v.v_angle + Vector (pEdict->v.pitch_speed, pEdict->v.yaw_speed, 0)); 
    
    // set the body angles to point the gun correctly
-   pEdict->v.angles.x = UTIL_WrapAngle (-pEdict->v.v_angle.x / 3);
+   // During tau jumping, allow full downward pitch
+   if (pBot.current_weapon.iId == VALVE_WEAPON_GAUSS && pBot.f_secondary_charging > gpGlobals->time)
+   {
+      pEdict->v.angles.x = UTIL_WrapAngle (-pEdict->v.v_angle.x);
+   }
+   else
+   {
+      pEdict->v.angles.x = UTIL_WrapAngle (-pEdict->v.v_angle.x / 3);
+   }
    pEdict->v.angles.y = UTIL_WrapAngle (pEdict->v.v_angle.y);
    pEdict->v.angles.z = 0;
 }

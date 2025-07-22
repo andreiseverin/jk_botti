@@ -2,6 +2,25 @@
     "makefile.makePath": "C:\\msys64\\usr\\bin",
     "makefile.configureOnOpen": false,
     "files.associations": {
-        "cmath": "cpp"
-    }
+        "cmath": "cpp",
+        "*.h": "cpp",
+        "*.cpp": "cpp"
+    },
+    "C_Cpp.intelliSenseEngine": "default",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/engine",
+        "${workspaceFolder}/common",
+        "${workspaceFolder}/dlls",
+        "${workspaceFolder}/pm_shared"
+    ],
+    "C_Cpp.default.cppStandard": "c++11",
+    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+    "C_Cpp.default.browse.path": [
+        "${workspaceFolder}",
+        "${workspaceFolder}/engine",
+        "${workspaceFolder}/common",
+        "${workspaceFolder}/dlls",
+        "${workspaceFolder}/pm_shared"
+    ]
 }
