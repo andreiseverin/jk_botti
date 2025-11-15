@@ -73,7 +73,8 @@ typedef struct
 #if 0
 24:
    qboolean can_taujump; // can tau jump? (waypoint taujump, attack/flee taujump)
-   
+
+
    int attack_taujump_frequency; // how often (out of 100 times) the bot will do tau jump at far away enemy
    int flee_taujump_frequency; // how often (out of 100 times) the bot will taujump away from enemy
    
