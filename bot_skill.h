@@ -45,7 +45,6 @@ typedef struct
    int random_duck_frequency; // how often (out of 100 times) the bot will do random duck jumping in combat mode
    int random_longjump_frequency; // how often (out of 100 times) the bot will do random longjump instead of random jump
 
-#if 0
    qboolean can_taujump; // can tau jump? (waypoint taujump, attack/flee taujump)
    
    int attack_taujump_frequency; // how often (out of 100 times) the bot will do tau jump at far away enemy
@@ -55,6 +54,8 @@ typedef struct
    float flee_taujump_distance; // max distance to flee enemy from
    float flee_taujump_health; // how much bot has health left when tries to escape
    float flee_taujump_escape_distance; // how long way bot tries to move away
+
+#if 0
 
    qboolean can_shoot_through_walls; // can shoot through walls by sound
    int wallshoot_frequency; // how often (out of 100 times) the bot will try attack enemy behind wall
