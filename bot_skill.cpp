@@ -22,6 +22,8 @@
 
 #include "bot_skill.h"
 
+#include <ctype.h>
+
 #if 0
 COPY+PASTE from bot_skill.h, for explaning values in following table:
 typedef struct
@@ -204,8 +206,131 @@ bot_skill_settings_t default_skill_settings[5] = {
 
 bot_skill_settings_t skill_settings[5];
 
+// new: load default skill table from cfg file (named fields: name[level]=value)
+static qboolean ParseBoolToken(const char *tok)
+{
+    if (!tok) return FALSE;
+    if (tok[0] == '1') return TRUE;
+    if (tok[0] == '0') return FALSE;
+    if (strcasecmp(tok, "true") == 0) return TRUE;
+    if (strcasecmp(tok, "false") == 0) return FALSE;
+    return FALSE;
+}
+
+static char *TrimWhitespace(char *s)
+{
+    char *end;
+    while (*s && isspace((unsigned char)*s)) s++;
+    if (*s == 0) return s;
+    end = s + strlen(s) - 1;
+    while (end > s && isspace((unsigned char)*end)) *end-- = '\0';
+    return s;
+}
+
+static void SetSkillField(bot_skill_settings_t *s, const char *name, const char *valstr)
+{
+    if (strcmp(name, "pause_frequency") == 0) s->pause_frequency = atoi(valstr);
+    else if (strcmp(name, "pause_time_min") == 0) s->pause_time_min = (float)atof(valstr);
+    else if (strcmp(name, "pause_time_max") == 0) s->pause_time_max = (float)atof(valstr);
+    else if (strcmp(name, "normal_strafe") == 0) s->normal_strafe = (float)atof(valstr);
+    else if (strcmp(name, "battle_strafe") == 0) s->battle_strafe = (float)atof(valstr);
+    else if (strcmp(name, "keep_optimal_dist") == 0) s->keep_optimal_dist = atoi(valstr);
+
+    else if (strcmp(name, "respawn_react_delay") == 0) s->respawn_react_delay = (float)atof(valstr);
+    else if (strcmp(name, "react_delay_min") == 0) s->react_delay_min = (float)atof(valstr);
+    else if (strcmp(name, "react_delay_max") == 0) s->react_delay_max = (float)atof(valstr);
+
+    else if (strcmp(name, "weaponchange_rate_min") == 0) s->weaponchange_rate_min = (float)atof(valstr);
+    else if (strcmp(name, "weaponchange_rate_max") == 0) s->weaponchange_rate_max = (float)atof(valstr);
+
+    else if (strcmp(name, "shootcone_diameter") == 0) s->shootcone_diameter = (float)atof(valstr);
+    else if (strcmp(name, "shootcone_minangle") == 0) s->shootcone_minangle = (float)atof(valstr);
+
+    else if (strcmp(name, "turn_skill") == 0) s->turn_skill = (float)atof(valstr);
+    else if (strcmp(name, "turn_slowness") == 0) s->turn_slowness = (float)atof(valstr);
+    else if (strcmp(name, "updown_turn_ration") == 0) s->updown_turn_ration = (float)atof(valstr);
+
+    else if (strcmp(name, "ping_emu_latency") == 0) s->ping_emu_latency = (float)atof(valstr);
+    else if (strcmp(name, "ping_emu_speed_varitation") == 0) s->ping_emu_speed_varitation = (float)atof(valstr);
+    else if (strcmp(name, "ping_emu_position_varitation") == 0) s->ping_emu_position_varitation = (float)atof(valstr);
+
+    else if (strcmp(name, "can_longjump") == 0) s->can_longjump = ParseBoolToken(valstr);
+    else if (strcmp(name, "random_jump_frequency") == 0) s->random_jump_frequency = atoi(valstr);
+    else if (strcmp(name, "random_jump_duck_frequency") == 0) s->random_jump_duck_frequency = atoi(valstr);
+    else if (strcmp(name, "random_duck_frequency") == 0) s->random_duck_frequency = atoi(valstr);
+    else if (strcmp(name, "random_longjump_frequency") == 0) s->random_longjump_frequency = atoi(valstr);
+
+    else if (strcmp(name, "can_taujump") == 0) s->can_taujump = ParseBoolToken(valstr);
+    else if (strcmp(name, "attack_taujump_frequency") == 0) s->attack_taujump_frequency = atoi(valstr);
+    else if (strcmp(name, "flee_taujump_frequency") == 0) s->flee_taujump_frequency = atoi(valstr);
+    else if (strcmp(name, "attack_taujump_distance") == 0) s->attack_taujump_distance = (float)atof(valstr);
+    else if (strcmp(name, "flee_taujump_distance") == 0) s->flee_taujump_distance = (float)atof(valstr);
+    else if (strcmp(name, "flee_taujump_health") == 0) s->flee_taujump_health = (float)atof(valstr);
+    else if (strcmp(name, "flee_taujump_escape_distance") == 0) s->flee_taujump_escape_distance = (float)atof(valstr);
+
+    else if (strcmp(name, "hearing_sensitivity") == 0) s->hearing_sensitivity = (float)atof(valstr);
+    else if (strcmp(name, "track_sound_time_min") == 0) s->track_sound_time_min = (float)atof(valstr);
+    else if (strcmp(name, "track_sound_time_max") == 0) s->track_sound_time_max = (float)atof(valstr);
+    // unknown names are ignored silently
+}
+
+static qboolean LoadDefaultSkillSettingsFromFile(const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    if (!fp) return FALSE;
+
+    char line[512];
+    qboolean any_set = FALSE;
+
+    while (fgets(line, sizeof(line), fp)) {
+        char *s = TrimWhitespace(line);
+        if (!*s) continue;
+        if (s[0] == '#' || s[0] == ';') continue;
+        if (s[0] == '/' && s[1] == '/') continue;
+
+        // find '='
+        char *eq = strchr(s, '=');
+        if (!eq) continue;
+        *eq = '\0';
+        char *lhs = TrimWhitespace(s);
+        char *rhs = TrimWhitespace(eq + 1);
+
+        // lhs expected: name[index]  (e.g. pause_frequency[1])
+        char fieldname[128];
+        int level = 0;
+        char *br = strchr(lhs, '[');
+        char *brc = br ? strchr(lhs, ']') : NULL;
+        if (!br || !brc) continue;
+        size_t namelen = br - lhs;
+        if (namelen >= sizeof(fieldname)) namelen = sizeof(fieldname) - 1;
+        memcpy(fieldname, lhs, namelen);
+        fieldname[namelen] = '\0';
+        fieldname[namelen] = '\0';
+        level = atoi(br + 1); // user provides 1..5
+
+        if (level < 1 || level > 5) continue;
+        int idx = level - 1;
+
+        TrimWhitespace(fieldname);
+        // set value on a copy of defaults: but skill_settings already initialized by caller
+        SetSkillField(&skill_settings[idx], fieldname, rhs);
+        any_set = TRUE;
+    }
+
+    fclose(fp);
+    return any_set;
+}
+
+// modify ResetSkillsToDefault to copy compiled defaults then override from cfg if present
 void ResetSkillsToDefault(void)
 {
-   memcpy(skill_settings, default_skill_settings, sizeof(skill_settings));
+    // copy compiled defaults first
+    memcpy(skill_settings, default_skill_settings, sizeof(skill_settings));
+
+    char cfg_path[256];
+    UTIL_BuildFileName_N(cfg_path, sizeof(cfg_path), "addons/jk_botti/bot_skill.cfg", NULL);
+
+    // if file exists, override fields that are present. keep compiled defaults for missing fields.
+    LoadDefaultSkillSettingsFromFile(cfg_path);
 }
 
